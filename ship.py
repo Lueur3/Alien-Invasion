@@ -1,4 +1,5 @@
 import pygame
+from settings import Settings
 
 class Ship:
     """Класс для управления кораблём."""
@@ -13,6 +14,17 @@ class Ship:
         self.rect = self.image.get_rect()
         # Каждый новый корабль появляется у нижнего края экрана.
         self.rect.midbottom = self.screen_rect.midbottom
+
+        # Флаг перемещения
+        self.moving_right = False
+        self.moving_left = False
+
+    def update(self):
+        """Обновляет позицию корабля с учётом флага."""
+        if self.moving_right and self.rect.x < 1065:
+            self.rect.x += 1
+        if self.moving_left and self.rect.x > 0:
+            self.rect.x -= 1
 
     def blitme(self):
         """Рисует корабль в текущей позиции"""

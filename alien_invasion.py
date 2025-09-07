@@ -24,6 +24,19 @@ class AlienInvasion:
                 pygame.quit()
                 sys.exit()
 
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    self.ship.moving_right = True
+                elif event.key == pygame.K_LEFT:
+                    self.ship.moving_left = True
+
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    self.ship.moving_right = False
+                elif event.key == pygame.K_LEFT:
+                    self.ship.moving_left = False
+
+
     def _update_screen(self):
         """Обновляет изображение на экране и отображает на новый экран."""
         self.screen.fill(self.settings.bg_color)
@@ -33,9 +46,9 @@ class AlienInvasion:
     def run_game(self):
         """Запуск основного цикла игры."""
         while True:
-            self._check_events()
-
-            self._update_screen()
+            self._check_events() # проверка событий
+            self.ship.update() # проверка движения
+            self._update_screen() # обновление экрана
 
 
 
