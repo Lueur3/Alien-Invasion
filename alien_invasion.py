@@ -17,12 +17,19 @@ class AlienInvasion:
 
         self.ship = Ship(self)
 
+    @staticmethod
+    def quit_game():
+        pygame.quit()
+        sys.exit()
+
     def _check_keydown_events(self, event):
         """Реагирует на нажатие клавиш."""
         if event.key == pygame.K_RIGHT:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
+        elif event.key == pygame.K_q:
+            AlienInvasion.quit_game()
 
     def _check_keyup_events(self, event):
         """Реагирует на опускание клавиш."""
@@ -35,13 +42,13 @@ class AlienInvasion:
         """Обрабатывает нажатия клавиш и события мыши."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                AlienInvasion.quit_game()
 
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+
 
 
     def _update_screen(self):
