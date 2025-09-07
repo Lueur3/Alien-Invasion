@@ -1,4 +1,6 @@
 import pygame
+
+
 from settings import Settings
 
 class Ship:
@@ -18,10 +20,13 @@ class Ship:
 
         # Сохранение вещественной координаты центра коробля
         self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
 
         # Флаг перемещения
         self.moving_right = False
         self.moving_left = False
+        self.moving_up = False
+        self.moving_down = False
 
     def update(self):
         """Обновляет позицию корабля с учётом флагов."""
@@ -31,11 +36,17 @@ class Ship:
         if self.moving_left :
             self.x -= self.settings.ship_speed
 
+        if self.moving_up:
+            self.y -= self.settings.ship_speed
+        if self.moving_down:
+            self.y += self.settings.ship_speed
+
         # Проверка выхода за границы
         self._check_bounds()
 
-        # Обновление атрибута rect на основании self.x
+        # Обновление атрибута rect на основании self.x и self.y
         self.rect.x = int(self.x)
+        self.rect.y = int(self.y)
 
 
     def _check_bounds(self):
@@ -44,6 +55,12 @@ class Ship:
             self.x = 0
         if self.x > self.settings.screen_width - self.rect.width:
             self.x = self.settings.screen_width - self.rect.width
+
+        if self.y > self.settings.screen_height - self.rect.height:
+           self.y = self.settings.screen_height - self.rect.height
+
+        if self.y < self.settings.screen_height / 2:
+            self.y = self.settings.screen_height / 2
 
     def blitme(self):
         """Рисует корабль в текущей позиции"""
