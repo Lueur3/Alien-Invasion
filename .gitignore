@@ -1,0 +1,21 @@
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Type checking
+.mypy_cache/
+.pytype/
+
+# Other
+.DS_Store
+Thumbs.db
