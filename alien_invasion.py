@@ -21,6 +21,8 @@ class AlienInvasion:
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.last_shot_time = 0
+        self.bullet_allowed = 4
 
     @staticmethod
     def quit_game():
@@ -59,8 +61,12 @@ class AlienInvasion:
 
     def _fire_bullet(self):
         """Создание нового снаряда и включение его в группу bullets."""
-        new_bullet = Bullet(self)
-        self.bullets.add(new_bullet)
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_shot_time > 200:
+            if len(self.bullets) < self.bullet_allowed:
+                new_bullet = Bullet(self)
+                self.bullets.add(new_bullet)
+                self.last_shot_time = current_time
 
     def _check_events(self):
         """Обрабатывает нажатия клавиш и события мыши."""
