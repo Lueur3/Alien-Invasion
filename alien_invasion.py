@@ -63,10 +63,18 @@ class AlienInvasion:
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = False
 
+    def _create_alien(self, alien_number):
+        """Создание пришельца и размещение его в ряду"""
+        alien = Alien(self)
+        alien_width = alien.rect.width // 1.5 + 10
+        alien.x = alien_width + 2 * alien_width * alien_number - 35
+        alien.rect.x = alien.x
+        self.aliens.add(alien)
+
     def _create_fleet(self):
         """Создание флота вторжения."""
         # Создание пришельца и вычисление количества пришельцев в ряду.
-        # Интервал между соседними пришельцами равен щирине пришельца.
+        # Интервал между соседними пришельцами равен ширине пришельца.
         alien = Alien(self)
         alien_width = alien.rect.width // 1.5 + 10
         available_space_x = self.settings.screen_width - (2 * alien_width)
@@ -75,11 +83,8 @@ class AlienInvasion:
 
         #Создание первого ряда пришельцев
         for alien_number in range(number_aliens_x):
-            # Создание пришельца и размещение его в ряду.
-            alien = Alien(self)
-            alien.x = alien_width + 2 * alien_width * alien_number - 35
-            alien.rect.x = alien.x
-            self.aliens.add(alien)
+            self._create_alien(alien_number)
+
 
     def _fire_bullet(self):
         """Создание нового снаряда и включение его в группу bullets."""
