@@ -1,6 +1,6 @@
 import sys
 import pygame
-
+from math import ceil
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
@@ -65,9 +65,21 @@ class AlienInvasion:
 
     def _create_fleet(self):
         """Создание флота вторжения."""
-        # Создание пришельца
+        # Создание пришельца и вычисление количества пришельцев в ряду.
+        # Интервал между соседними пришельцами равен щирине пришельца.
         alien = Alien(self)
-        self.aliens.add(alien)
+        alien_width = alien.rect.width // 1.5 + 10
+        available_space_x = self.settings.screen_width - (2 * alien_width)
+        number_aliens_x = ceil(available_space_x / (2 * alien_width))
+
+
+        #Создание первого ряда пришельцев
+        for alien_number in range(number_aliens_x):
+            # Создание пришельца и размещение его в ряду.
+            alien = Alien(self)
+            alien.x = alien_width + 2 * alien_width * alien_number - 35
+            alien.rect.x = alien.x
+            self.aliens.add(alien)
 
     def _fire_bullet(self):
         """Создание нового снаряда и включение его в группу bullets."""
