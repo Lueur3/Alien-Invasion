@@ -4,6 +4,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 class AlienInvasion:
     """Класс для управления ресурсами и поведением игры."""
@@ -21,8 +22,11 @@ class AlienInvasion:
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
         self.last_shot_time = 0
         self.bullet_allowed = 4
+
+        self._create_fleet()
 
     @staticmethod
     def quit_game():
@@ -58,6 +62,12 @@ class AlienInvasion:
             self.ship.moving_up = False
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = False
+
+    def _create_fleet(self):
+        """Создание флота вторжения."""
+        # Создание пришельца
+        alien = Alien(self)
+        self.aliens.add(alien)
 
     def _fire_bullet(self):
         """Создание нового снаряда и включение его в группу bullets."""
@@ -95,6 +105,7 @@ class AlienInvasion:
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        self.aliens.draw(self.screen)
         pygame.display.flip()
 
     def run_game(self):
