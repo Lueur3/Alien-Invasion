@@ -3,6 +3,7 @@ import pygame
 
 from settings import Settings
 from ship import Ship
+from bullet import Bullet
 
 class AlienInvasion:
     """Класс для управления ресурсами и поведением игры."""
@@ -19,6 +20,7 @@ class AlienInvasion:
         pygame.display.set_caption('Alien Invasion')
 
         self.ship = Ship(self)
+        self.bullets = pygame.sprite.Group()
 
     @staticmethod
     def quit_game():
@@ -37,6 +39,9 @@ class AlienInvasion:
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = True
 
+        elif event.key == pygame.K_SPACE:
+            self._fire_bullet()
+
         elif event.key == pygame.K_q:
             AlienInvasion.quit_game()
 
@@ -51,6 +56,11 @@ class AlienInvasion:
             self.ship.moving_up = False
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = False
+
+    def _fire_bullet(self):
+        """Создание нового снаряда и включение его в группу bullets."""
+        new_bullet = Bullet(self)
+        self.bullets.add(new_bullet)
 
     def _check_events(self):
         """Обрабатывает нажатия клавиш и события мыши."""
@@ -69,13 +79,22 @@ class AlienInvasion:
         """Обновляет изображение на экране и отображает на новый экран."""
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
         pygame.display.flip()
 
     def run_game(self):
         """Запуск основного цикла игры."""
         while True:
             self._check_events() # проверка событий
-            self.ship.update() # проверка движения
+            self.ship.update() #  Обновление движения корабля
+            self.bullets.update() # Обновление движения пули
+
+            # Удаление снарядов, вышедших за край
+            for bullet in self.bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    self.bullets.remove(bullet)
+
             self._update_screen() # обновление экрана
 
 
