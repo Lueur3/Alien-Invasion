@@ -79,7 +79,15 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
 
+    def _update_bullets(self):
+        """Обновляет позиции снарядов и уничтожает старые снаряды"""
+        # Обновление позиций снраядов.
+        self.bullets.update()
 
+        # Удаление снарядов, вышедших за край
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
 
     def _update_screen(self):
         """Обновляет изображение на экране и отображает на новый экран."""
@@ -94,13 +102,7 @@ class AlienInvasion:
         while True:
             self._check_events() # проверка событий
             self.ship.update() #  Обновление движения корабля
-            self.bullets.update() # Обновление движения пули
-
-            # Удаление снарядов, вышедших за край
-            for bullet in self.bullets.copy():
-                if bullet.rect.bottom <= 0:
-                    self.bullets.remove(bullet)
-
+            self._update_bullets() # Обновление движения пуль
             self._update_screen() # обновление экрана
 
 
