@@ -136,6 +136,16 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
+
+    def _check_play_button(self, mouse_pos):
+        """Запускает новую игру при нажатии кнопки Play."""
+        if self.play_button.rect.collidepoint(mouse_pos):
+            self.stats.game_active = True
+
+
     def _ship_hit(self):
         """Обрабатывает столкновение корабля с пришельцем"""
         # Уменьшение ships_left
