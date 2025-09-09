@@ -91,6 +91,18 @@ class AlienInvasion:
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
 
+    def _check_fleet_edges(self):
+        """Реагирует на достижение пришельцем края экрана."""
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Опускает весь флот и меняет направление флота."""
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
 
     def _fire_bullet(self):
         """Создание нового снаряда и включение его в группу bullets."""
@@ -123,7 +135,9 @@ class AlienInvasion:
                 self.bullets.remove(bullet)
 
     def _update_aliens(self):
-        """Обновляет позиции всех пришельцев во флоте."""
+        """Проверяет, достиг ли флот края экрана,
+        с последующим обновлением позиций всех пришельцев во флоте."""
+        self._check_fleet_edges()
         self.aliens.update()
 
     def _update_screen(self):
