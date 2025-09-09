@@ -1,10 +1,14 @@
 import sys
 import pygame
+
 from math import ceil
+from time import sleep
+
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from game_stats import GameStats
 
 class AlienInvasion:
     """Класс для управления ресурсами и поведением игры."""
@@ -19,6 +23,9 @@ class AlienInvasion:
 
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption('Alien Invasion')
+
+        # Создание экземпляра для хранения игровой статистики
+        self.stats = GameStats(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -124,6 +131,22 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
 
+    def _ship_hit(self):
+        """Обрабатывает столкновение корабля с пришельцем"""
+        # Уменьшение ships_left
+        self.stats.ships_left -= 1
+
+        # Очистка списков пришельцев и снарядов
+        self.aliens.empty()
+        self.bullets.empty()
+
+        # Создание нового флота и размещение корабля в центре.
+        self._create_fleet()
+        self.ship.center_ship()
+
+        # Пауза
+        sleep(0.5)
+
     def _check_bullet_alien_collisions(self):
         # Проверка попадания в пришельце.
         # При обнаружении попадания удалить снаряд и пришельца.
@@ -153,6 +176,10 @@ class AlienInvasion:
         с последующим обновлением позиций всех пришельцев во флоте."""
         self._check_fleet_edges()
         self.aliens.update()
+
+        # Проверка коллизии пришелец - корабль
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            self._ship_hit()
 
     def _update_screen(self):
         """Обновляет изображение на экране и отображает на новый экран."""
