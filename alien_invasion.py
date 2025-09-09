@@ -10,7 +10,7 @@ class AlienInvasion:
     """Класс для управления ресурсами и поведением игры."""
 
     def __init__(self):
-        """Инициализирует игру и создаёт игровые ресуры"""
+        """Инициализирует игру и создаёт игровые ресурcы."""
         pygame.init()
         self.settings = Settings()
 
@@ -126,13 +126,18 @@ class AlienInvasion:
 
     def _update_bullets(self):
         """Обновляет позиции снарядов и уничтожает старые снаряды"""
-        # Обновление позиций снраядов.
+        # Обновление позиций снарядов.
         self.bullets.update()
 
         # Удаление снарядов, вышедших за край
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
+
+        # Проверка попадания в пришельце.
+        # При обнаружении попадания удалить снаряд и пришельца.
+        collisions = pygame.sprite.groupcollide(self.bullets,
+                                self.aliens, True, True)
 
     def _update_aliens(self):
         """Проверяет, достиг ли флот края экрана,
