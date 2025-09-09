@@ -122,6 +122,10 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+    def _update_aliens(self):
+        """Обновляет позиции всех пришельцев во флоте."""
+        self.aliens.update()
+
     def _update_screen(self):
         """Обновляет изображение на экране и отображает на новый экран."""
         self.screen.fill(self.settings.bg_color)
@@ -137,6 +141,7 @@ class AlienInvasion:
             self._check_events() # проверка событий
             self.ship.update() #  Обновление движения корабля
             self._update_bullets() # Обновление движения пуль
+            self._update_aliens()
             self._update_screen() # обновление экрана
 
 
