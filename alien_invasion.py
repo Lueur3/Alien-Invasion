@@ -35,7 +35,9 @@ class AlienInvasion:
         self.last_shot_time = 0
         self.bullet_allowed = 4
 
-        self._create_fleet()
+        self.curr_rows = 1
+
+        self._create_fleet(0)
 
         # Создание кнопки Play.
         self.play_button = Button(self, "Play")
@@ -75,16 +77,18 @@ class AlienInvasion:
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = False
 
-    def _create_alien(self, alien_number, row_number):
+    def _create_alien(self, alien_number, row_number, curr_rows):
         """Создание пришельца и размещение его в ряду"""
         alien = Alien(self)
         alien_width, alien_height = alien.rect.width // 1.5 + 10, alien.rect.height
         alien.x = alien_width + 2 * alien_width * alien_number - 35
         alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height + 1.5 *  alien.rect.height * row_number - 400
+        alien.y = alien.rect.height + alien.rect.height // 2
+        alien.rect.y =  -(alien.y * (curr_rows - row_number))
+
         self.aliens.add(alien)
 
-    def _create_fleet(self):
+    def _create_fleet(self, curr_rows):
         """Создание флота вторжения."""
         # Создание пришельца и вычисление количества пришельцев в ряду.
         # Интервал между соседними пришельцами равен ширине пришельца.
@@ -93,15 +97,10 @@ class AlienInvasion:
         available_space_x = self.settings.screen_width - (2 * alien_width)
         number_aliens_x = ceil(available_space_x / (2 * alien_width))
 
-        """Определяет количество рядов, помещающихся на экране."""
-        ship_height = self.ship.rect.height
-        available_space_y = (self.settings.screen_height - (2 * alien_height) - ship_height)
-        number_rows = ceil(available_space_y / (2 * alien_height))
-
         # Создание флота вторжения.
-        for row_number in range(number_rows):
+        for row_number in range(curr_rows):
             for alien_number in range(number_aliens_x):
-                self._create_alien(alien_number, row_number)
+                self._create_alien(alien_number, row_number, curr_rows)
 
     def _check_fleet_edges(self):
         """Реагирует на достижение пришельцем края экрана."""
@@ -153,7 +152,7 @@ class AlienInvasion:
             self.bullets.empty()
 
             # Создание нового флота и размещение корабля в центре.
-            self._create_fleet()
+            self._create_fleet(0)
             self.ship.center_ship()
 
             # Указатель мыши скрывается.
@@ -171,7 +170,8 @@ class AlienInvasion:
             self.bullets.empty()
 
             # Создание нового флота и размещение корабля в центре.
-            self._create_fleet()
+            self.curr_rows = 1
+            self._create_fleet(self.curr_rows)
             self.ship.center_ship()
 
             # Пауза
@@ -189,7 +189,11 @@ class AlienInvasion:
         if not self.aliens:
             # Уничтожение существующих снарядов и создание нового флота.
             self.bullets.empty()
-            self._create_fleet()
+            self._create_fleet(self.curr_rows)
+            self.settings.increase_speed()
+            self.curr_rows += 1
+            if self.curr_rows % 2 == 0:
+                self.bullet_allowed += 1
 
 
     def _update_bullets(self):
@@ -213,6 +217,10 @@ class AlienInvasion:
         # Проверка коллизии пришелец - корабль
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
+
+        for alien in self.aliens.copy():
+            if alien.rect.top >= self.settings.screen_height:
+                self.aliens.remove(alien)
 
     def _update_screen(self):
         """Обновляет изображение на экране и отображает на новый экран."""
