@@ -134,18 +134,21 @@ class AlienInvasion:
     def _ship_hit(self):
         """Обрабатывает столкновение корабля с пришельцем"""
         # Уменьшение ships_left
-        self.stats.ships_left -= 1
+        if self.stats.ships_left > 0:
+            self.stats.ships_left -= 1
 
-        # Очистка списков пришельцев и снарядов
-        self.aliens.empty()
-        self.bullets.empty()
+            # Очистка списков пришельцев и снарядов
+            self.aliens.empty()
+            self.bullets.empty()
 
-        # Создание нового флота и размещение корабля в центре.
-        self._create_fleet()
-        self.ship.center_ship()
+            # Создание нового флота и размещение корабля в центре.
+            self._create_fleet()
+            self.ship.center_ship()
 
-        # Пауза
-        sleep(0.5)
+            # Пауза
+            sleep(0.5)
+        else:
+            self.stats.game_active = False
 
     def _check_bullet_alien_collisions(self):
         # Проверка попадания в пришельце.
@@ -194,9 +197,15 @@ class AlienInvasion:
         """Запуск основного цикла игры."""
         while True:
             self._check_events() # проверка событий
-            self.ship.update() #  Обновление движения корабля
-            self._update_bullets() # Обновление движения пуль
-            self._update_aliens()
+            if self.stats.game_active:
+                self.ship.update() #  Обновление движения корабля
+                self._update_bullets() # Обновление движения пуль
+                self._update_aliens()
+
+            else:
+                print('Game over')
+                AlienInvasion.quit_game()
+
             self._update_screen() # обновление экрана
 
 
