@@ -9,6 +9,7 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
+from button import Button
 
 class AlienInvasion:
     """Класс для управления ресурсами и поведением игры."""
@@ -27,6 +28,7 @@ class AlienInvasion:
         # Создание экземпляра для хранения игровой статистики
         self.stats = GameStats(self)
 
+
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
@@ -34,6 +36,9 @@ class AlienInvasion:
         self.bullet_allowed = 4
 
         self._create_fleet()
+
+        # Создание кнопки Play.
+        self.play_button = Button(self, "Play")
 
     @staticmethod
     def quit_game():
@@ -191,6 +196,11 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+
+        # Кнопка Play отображается в том случае, если игра неактивна.
+        if not self.stats.game_active:
+            self.play_button.draw_button()
+
         pygame.display.flip()
 
     def run_game(self):
@@ -202,9 +212,7 @@ class AlienInvasion:
                 self._update_bullets() # Обновление движения пуль
                 self._update_aliens()
 
-            else:
-                print('Game over')
-                AlienInvasion.quit_game()
+
 
             self._update_screen() # обновление экрана
 
