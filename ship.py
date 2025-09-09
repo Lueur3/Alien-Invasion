@@ -59,8 +59,8 @@ class Ship:
         if self.y > self.settings.screen_height - self.rect.height:
            self.y = self.settings.screen_height - self.rect.height
 
-        if self.y < self.settings.screen_height / 2 - self.settings.screen_height / 4 :
-            self.y = self.settings.screen_height / 4
+        if self.y < self.settings.screen_height / 2 :
+            self.y = self.settings.screen_height / 2
 
     def blitme(self):
         """Рисует корабль в текущей позиции"""
