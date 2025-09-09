@@ -69,7 +69,7 @@ class AlienInvasion:
         alien_width, alien_height = alien.rect.width // 1.5 + 10, alien.rect.height
         alien.x = alien_width + 2 * alien_width * alien_number - 35
         alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height + 1.5 *  alien.rect.height * row_number - 120
+        alien.rect.y = alien.rect.height + 1.5 *  alien.rect.height * row_number - 400
         self.aliens.add(alien)
 
     def _create_fleet(self):
@@ -138,6 +138,11 @@ class AlienInvasion:
         # При обнаружении попадания удалить снаряд и пришельца.
         collisions = pygame.sprite.groupcollide(self.bullets,
                                 self.aliens, True, True)
+
+        if not self.aliens:
+            # Уничтожение существующих снарядов и создание нового флота.
+            self.bullets.empty()
+            self._create_fleet()
 
     def _update_aliens(self):
         """Проверяет, достиг ли флот края экрана,
