@@ -124,6 +124,18 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
 
+    def _check_bullet_alien_collisions(self):
+        # Проверка попадания в пришельце.
+        # При обнаружении попадания удалить снаряд и пришельца.
+        collisions = pygame.sprite.groupcollide(self.bullets,
+                                                self.aliens, True, True)
+
+        if not self.aliens:
+            # Уничтожение существующих снарядов и создание нового флота.
+            self.bullets.empty()
+            self._create_fleet()
+
+
     def _update_bullets(self):
         """Обновляет позиции снарядов и уничтожает старые снаряды"""
         # Обновление позиций снарядов.
@@ -134,15 +146,7 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
-        # Проверка попадания в пришельце.
-        # При обнаружении попадания удалить снаряд и пришельца.
-        collisions = pygame.sprite.groupcollide(self.bullets,
-                                self.aliens, True, True)
-
-        if not self.aliens:
-            # Уничтожение существующих снарядов и создание нового флота.
-            self.bullets.empty()
-            self._create_fleet()
+        self._check_bullet_alien_collisions()
 
     def _update_aliens(self):
         """Проверяет, достиг ли флот края экрана,
