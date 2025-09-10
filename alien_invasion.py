@@ -63,8 +63,6 @@ class AlienInvasion:
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
 
-        elif event.key == pygame.K_q:
-            AlienInvasion.quit_game()
 
     def _check_keyup_events(self, event):
         """Реагирует на опускание клавиш."""
@@ -125,6 +123,7 @@ class AlienInvasion:
                 self.bullets.add(new_bullet)
                 self.last_shot_time = current_time
 
+
     def _check_events(self):
         """Обрабатывает нажатия клавиш и события мыши."""
         for event in pygame.event.get():
@@ -132,13 +131,25 @@ class AlienInvasion:
                 AlienInvasion.quit_game()
 
             elif event.type == pygame.KEYDOWN:
-                self._check_keydown_events(event)
+                # Всегда обрабатываем клавишу Q для выхода
+                if event.key == pygame.K_q:
+                    AlienInvasion.quit_game()
+                # Остальные клавиши обрабатываем только если игра активна
+                elif self.stats.game_active:
+                    self._check_keydown_events(event)
+
             elif event.type == pygame.KEYUP:
-                self._check_keyup_events(event)
+                # Обрабатываем отпускание клавиш только если игра активна
+                if self.stats.game_active:
+                    self._check_keyup_events(event)
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
+
+
+
+
 
     def _check_play_button(self, mouse_pos):
         """Запускает новую игру при нажатии кнопки Play."""
@@ -156,7 +167,7 @@ class AlienInvasion:
             self.bullets.empty()
 
             # Создание нового флота и размещение корабля в центре.
-            self._create_fleet(0)
+            self._create_fleet(self.settings.curr_rows)
             self.ship.center_ship()
 
             # Указатель мыши скрывается.
@@ -253,7 +264,7 @@ class AlienInvasion:
     def run_game(self):
         """Запуск основного цикла игры."""
         while True:
-            self._check_events() # проверка событий
+            self._check_events()  # проверка событий
             if self.stats.game_active:
                 self.ship.update() #  Обновление движения корабля
                 self._update_bullets() # Обновление движения пуль
