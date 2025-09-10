@@ -13,4 +13,3 @@ class GameStats:
         """Инициализирует статистику, изменяющуюся в ходе игры."""
         self.ships_left = self.settings.ship_limit
         self.score = 0
-        self.curr_rows = 1
