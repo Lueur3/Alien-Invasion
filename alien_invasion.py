@@ -35,8 +35,6 @@ class AlienInvasion:
         self.last_shot_time = 0
         self.bullet_allowed = 4
 
-        self.curr_rows = 1
-
         self._create_fleet(0)
 
         # Создание кнопки Play.
@@ -146,6 +144,7 @@ class AlienInvasion:
             # Сброс игровой статистики.
             self.stats.reset_stats()
             self.stats.game_active = True
+            self.settings.initialize_dynamic_settings()
 
             # Очистка списков пришельцев и снарядов.
             self.aliens.empty()
@@ -170,8 +169,7 @@ class AlienInvasion:
             self.bullets.empty()
 
             # Создание нового флота и размещение корабля в центре.
-            self.curr_rows = 1
-            self._create_fleet(self.curr_rows)
+            self._create_fleet(self.stats.curr_rows)
             self.ship.center_ship()
 
             # Пауза
@@ -189,10 +187,10 @@ class AlienInvasion:
         if not self.aliens:
             # Уничтожение существующих снарядов и создание нового флота.
             self.bullets.empty()
-            self._create_fleet(self.curr_rows)
+            self._create_fleet(self.stats.curr_rows)
             self.settings.increase_speed()
-            self.curr_rows += 1
-            if self.curr_rows % 2 == 0:
+            self.stats.curr_rows += 1
+            if self.stats.curr_rows % 2 == 0:
                 self.bullet_allowed += 1
 
 
