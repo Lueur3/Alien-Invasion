@@ -148,6 +148,7 @@ class AlienInvasion:
             self.stats.reset_stats()
             self.stats.game_active = True
             self.sb.prep_score()
+            self.sb.prep_ships()
             self.settings.initialize_dynamic_settings()
 
             # Очистка списков пришельцев и снарядов.
@@ -167,13 +168,14 @@ class AlienInvasion:
         # Уменьшение ships_left
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
 
             # Очистка списков пришельцев и снарядов
             self.aliens.empty()
             self.bullets.empty()
 
             # Создание нового флота и размещение корабля в центре.
-            self._create_fleet(self.stats.curr_rows)
+            self._create_fleet(self.settings.curr_rows)
             self.ship.center_ship()
 
             # Пауза
